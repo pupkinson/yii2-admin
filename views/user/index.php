@@ -48,7 +48,22 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-method' => 'post',
                             'data-pjax' => '0',
                         ];
-                        return Html::a('<span class="glyphicon glyphicon-ok"></span>', $url, $options);
+                        return Html::a('<span class="fas fa-check-square"></span>', $url, $options);
+                    },
+                    'update' =>  function($url,$model) {
+                        return Html::a('<i class="fas fa-edit"></i>', $url, [
+                            'title' => Yii::t('app', 'update')
+                        ]);
+                    },
+                    'view' =>  function($url,$model) {
+                        return Html::a('<i class="fas fa-eye"></i>', $url, [
+                            'title' => Yii::t('app', 'view')
+                        ]);
+                    },
+                    'delete' => function($url,$model) {
+                        return Html::a('<i class="fas fa-trash"></i>', $url, [
+                            'title' => Yii::t('app', 'delete')
+                        ]);
                     }
                     ]
                 ],
