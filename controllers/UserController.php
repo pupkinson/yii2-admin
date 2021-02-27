@@ -231,7 +231,7 @@ class UserController extends Controller
     {
         /* @var $user User */
         $user = $this->findModel($id);
-        if ($user->status == UserStatus::INACTIVE) {
+        if ($user->status != UserStatus::ACTIVE) {
             $user->status = UserStatus::ACTIVE;
             if ($user->save()) {
                 return $this->goHome();
