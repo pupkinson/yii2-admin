@@ -27,7 +27,7 @@ use mdm\admin\models\Menu;
  *    return [
  *        'label' => $menu['name'],
  *        'url' => [$menu['route']],
- *        'options' => $data,
+ *        'linkOptions' => $data,
  *        'items' => $menu['children']
  *        ]
  *    ]
@@ -53,7 +53,8 @@ class MenuHelper
      *    return [
      *        'label' => $menu['name'],
      *        'url' => [$menu['route']],
-     *        'options' => $data,
+     *        '
+     ' => $data,
      *        'items' => $menu['children']
      *        ]
      *    ]
@@ -201,9 +202,11 @@ class MenuHelper
                 if ($callback !== null) {
                     $item = call_user_func($callback, $menu);
                 } else {
+                    parse_str($menu['data'], $linkOptions);
                     $item = [
                         'label' => $menu['name'],
                         'url' => static::parseRoute($menu['route']),
+                        'linkOptions' => $linkOptions,
                     ];
                     if ($menu['children'] != []) {
                         $item['items'] = $menu['children'];
