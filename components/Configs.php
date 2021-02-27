@@ -77,7 +77,7 @@ class Configs extends \mdm\admin\BaseObject
     /**
      * @var string Menu table name.
      */
-    public $userTable = '{{%user}}';
+    public $userTable = '{{%users}}';
 
     /**
      * @var integer Default status user signup. 10 mean active.
