@@ -1,44 +1,40 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use mdm\admin\components\Helper;
 
-/* @var $this yii\web\View */
+/* @var $this  yii\web\View */
+/* @var $model mdm\admin\models\BizRule */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $searchModel mdm\admin\models\searchs\Menu */
+/* @var $searchModel mdm\admin\models\searchs\BizRule */
 
-$this->title = Yii::t('rbac-admin', 'Menus');
+$this->title = Yii::t('rbac-admin', 'Rules');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="menu-index">
+<div class="role-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
 
     <p>
-        <?= Html::a(Yii::t('rbac-admin', 'Create Menu'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('rbac-admin', 'Create Rule'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php Pjax::begin(); ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'name',
             [
-                'attribute' => 'menuParent.name',
-                'filter' => Html::activeTextInput($searchModel, 'parent_name', [
-                    'class' => 'form-control', 'id' => null
-                ]),
-                'label' => Yii::t('rbac-admin', 'Parent'),
+                'attribute' => 'name',
+                'label' => Yii::t('rbac-admin', 'Name'),
             ],
-            'route',
-            'order',
-            ['class' => 'yii\grid\ActionColumn',
-                            'buttons' => [
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => Helper::filterActionColumn(['view', 'update', 'delete']),
+                'buttons' => [
                     'update' =>  function($url,$model) {
                         return Html::a('<i class="fas fa-edit"></i>', $url, [
                             'title' => Yii::t('app', 'update')
@@ -54,11 +50,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             'title' => Yii::t('app', 'delete')
                         ]);
                     }
-                 ]
+                ]
             ],
         ],
     ]);
     ?>
-<?php Pjax::end(); ?>
 
 </div>
