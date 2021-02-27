@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'status',
                 'value' => function($model) {
-                    return $model->status == 0 ? 'Inactive' : 'Active';
+                    return $model->status == UserStatus::ACTIVE ? 'Active' : 'Inactive';
                 },
                 'filter' => [
                     0 => 'Inactive',
@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => Helper::filterActionColumn(['view', 'activate', 'delete']),
                 'buttons' => [
                     'activate' => function($url, $model) {
-                        if ($model->status == 10) {
+                        if ($model->status == UserStatus::ACTIVE) {
                             return '';
                         }
                         $options = [
