@@ -38,6 +38,7 @@ class UserController extends Controller
                     'delete' => ['post'],
                     'logout' => ['post'],
                     'activate' => ['post'],
+                    'deactivate' => ['post'],
                 ],
             ],
         ];
@@ -233,6 +234,23 @@ class UserController extends Controller
         $user = $this->findModel($id);
         if ($user->status != UserStatus::ACTIVE) {
             $user->status = UserStatus::ACTIVE;
+            if ($user->save()) {
+                return $this->actionIndex();
+            } else {
+                $errors = $user->firstErrors;
+                throw new UserException(reset($errors));
+            }
+        }
+        return $this->actionIndex();
+    }
+
+    public function actionDeactivate($id)
+    {
+        /* @var $user User */
+        if ($id == Yii::$app->user->identity->getId()) return $this->actionIndex();
+        $user = $this->findModel($id);
+        if ($user->status == UserStatus::ACTIVE) {
+            $user->status = UserStatus::INACTIVE;
             if ($user->save()) {
                 return $this->actionIndex();
             } else {
