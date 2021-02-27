@@ -117,7 +117,7 @@ class UserController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->getUser()->isGuest) {
-            return $this->goHome();
+            return $this->actionIndex();
         }
 
         $model = new Login();
@@ -138,7 +138,7 @@ class UserController extends Controller
     {
         Yii::$app->getUser()->logout();
 
-        return $this->goHome();
+        return $this->actionIndex();
     }
 
     /**
@@ -150,7 +150,7 @@ class UserController extends Controller
         $model = new Signup();
         if ($model->load(Yii::$app->getRequest()->post())) {
             if ($user = $model->signup()) {
-                return $this->goHome();
+                return $this->actionIndex();
             }
         }
 
@@ -170,7 +170,7 @@ class UserController extends Controller
             if ($model->sendEmail()) {
                 Yii::$app->getSession()->setFlash('success', 'Check your email for further instructions.');
 
-                return $this->goHome();
+                return $this->actionIndex();
             } else {
                 Yii::$app->getSession()->setFlash('error', 'Sorry, we are unable to reset password for email provided.');
             }
@@ -196,7 +196,7 @@ class UserController extends Controller
         if ($model->load(Yii::$app->getRequest()->post()) && $model->validate() && $model->resetPassword()) {
             Yii::$app->getSession()->setFlash('success', 'New password was saved.');
 
-            return $this->goHome();
+            return $this->actionIndex();
         }
 
         return $this->render('resetPassword', [
@@ -212,7 +212,7 @@ class UserController extends Controller
     {
         $model = new ChangePassword();
         if ($model->load(Yii::$app->getRequest()->post()) && $model->change()) {
-            return $this->goHome();
+            return $this->actionIndex();
         }
 
         return $this->render('change-password', [
@@ -234,13 +234,13 @@ class UserController extends Controller
         if ($user->status != UserStatus::ACTIVE) {
             $user->status = UserStatus::ACTIVE;
             if ($user->save()) {
-                return $this->goHome();
+                return $this->actionIndex();
             } else {
                 $errors = $user->firstErrors;
                 throw new UserException(reset($errors));
             }
         }
-        return $this->goHome();
+        return $this->actionIndex();
     }
 
     /**
