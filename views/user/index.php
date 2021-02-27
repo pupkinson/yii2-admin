@@ -1,8 +1,10 @@
 <?php
 
+use mdm\admin\components\UserStatus;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use mdm\admin\components\Helper;
+use yii\helpers\Url;;
 
 /* @var $this yii\web\View */
 /* @var $searchModel mdm\admin\models\searchs\User */
@@ -19,9 +21,21 @@ $this->params['breadcrumbs'][] = $this->title;
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'persistResize' => 'true',
+        'pjax'=>true,
+        'pjaxSettings'=>
+        [
+            'neverTimeout'=>true,
+        ],
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            'username',
+            'id',
+            [
+                'attribute' => 'username',
+                'value' => function($model) {
+                    return Html::a($model->username, Url::to(['view', 'id' => $model->id]), ['title' => Yii::t('app', 'view')]);
+                },
+                'format' => 'raw',
+            ],
             'email:email',
             [
                 'attribute' => 'status',
@@ -29,13 +43,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->status == UserStatus::ACTIVE ? 'Active' : 'Inactive';
                 },
                 'filter' => [
-                    0 => 'Inactive',
-                    10 => 'Active'
+                    UserStatus::INACTIVE => 'Inactive',
+                    UserStatus::ACTIVE => 'Active'
                 ]
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => Helper::filterActionColumn(['view', 'activate', 'delete']),
+                'template' => Helper::filterActionColumn(['deactivate', 'activate', 'update', 'delete']),
                 'buttons' => [
                     'activate' => function($url, $model) {
                         if ($model->status == UserStatus::ACTIVE) {
@@ -50,19 +64,35 @@ $this->params['breadcrumbs'][] = $this->title;
                         ];
                         return Html::a('<span class="fas fa-check-square"></span>', $url, $options);
                     },
+                    'deactivate' => function($url, $model) {
+                        if ($model->status != UserStatus::ACTIVE || ($model->getId() == Yii::$app->user->identity->getId())) {
+                            return '';
+                        }
+                        $options = [
+                            'title' => Yii::t('rbac-admin', 'Dectivate'),
+                            'aria-label' => Yii::t('rbac-admin', 'Dectivate'),
+                            'data-confirm' => Yii::t('rbac-admin', 'Are you sure you want to deactivate this user?'),
+                            'data-method' => 'post',
+                            'data-pjax' => '0',
+                        ];
+                        return Html::a('<span class="fas fa-times"></span>', $url, $options);
+                    },
                     'update' =>  function($url,$model) {
                         return Html::a('<i class="fas fa-edit"></i>', $url, [
-                            'title' => Yii::t('app', 'update')
+                            'title' => Yii::t('app', 'update'),
+                            'data-pjax' => '0'
                         ]);
                     },
                     'view' =>  function($url,$model) {
                         return Html::a('<i class="fas fa-eye"></i>', $url, [
-                            'title' => Yii::t('app', 'view')
+                            'title' => Yii::t('app', 'view'),
+                            'data-pjax' => '0'
                         ]);
                     },
                     'delete' => function($url,$model) {
                         return Html::a('<i class="fas fa-trash"></i>', $url, [
-                            'title' => Yii::t('app', 'delete')
+                            'title' => Yii::t('app', 'delete'),
+                            'data-pjax' => '0'
                         ]);
                     }
                     ]
