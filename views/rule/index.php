@@ -1,8 +1,9 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use mdm\admin\components\Helper;
 
 /* @var $this  yii\web\View */
 /* @var $model mdm\admin\models\BizRule */
@@ -32,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
+                'template' => Helper::filterActionColumn(['view', 'update', 'delete']),
                 'buttons' => [
                     'update' =>  function($url,$model) {
                         return Html::a('<i class="fas fa-edit"></i>', $url, [
@@ -48,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'title' => Yii::t('app', 'delete')
                         ]);
                     }
-                 ]
+                ]
             ],
         ],
     ]);
