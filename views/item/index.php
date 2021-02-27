@@ -1,9 +1,10 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use mdm\admin\components\RouteRule;
 use mdm\admin\components\Configs;
+use mdm\admin\components\Helper;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -45,6 +46,7 @@ unset($rules[RouteRule::RULE_NAME]);
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
+                'template' => Helper::filterActionColumn(['view', 'update', 'delete']),
                 'buttons' => [
                     'update' =>  function($url,$model) {
                         return Html::a('<i class="fas fa-edit"></i>', $url, [
@@ -61,7 +63,7 @@ unset($rules[RouteRule::RULE_NAME]);
                             'title' => Yii::t('app', 'delete')
                         ]);
                     }
-                 ]
+                ]
             ],
         ],
     ])
