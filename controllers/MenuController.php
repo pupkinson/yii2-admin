@@ -89,9 +89,7 @@ class MenuController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->menuParent) {
-            $model->parent_name = $model->menuParent->name;
-        }
+        $model->parent_name = $model->menuParent->name;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Helper::invalidate();
             return $this->redirect(['view', 'id' => $model->id]);
