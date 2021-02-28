@@ -1,39 +1,43 @@
 <?php
 
 use yii\helpers\Html;
-use kartik\grid\GridView;
+use yii\grid\GridView;
 use yii\widgets\Pjax;
-use mdm\admin\components\Helper;
 
-/* @var $this  yii\web\View */
-/* @var $model mdm\admin\models\BizRule */
+/* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $searchModel mdm\admin\models\searchs\BizRule */
+/* @var $searchModel mdm\admin\models\searchs\Menu */
 
-$this->title = Yii::t('rbac-admin', 'Rules');
+$this->title = Yii::t('rbac-admin', 'Menus');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="role-index">
+<div class="menu-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
 
     <p>
-        <?= Html::a(Yii::t('rbac-admin', 'Create Rule'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('rbac-admin', 'Create Menu'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
+    <?php Pjax::begin(); ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+            'name',
             [
-                'attribute' => 'name',
-                'label' => Yii::t('rbac-admin', 'Name'),
+                'attribute' => 'menuParent.name',
+                'filter' => Html::activeTextInput($searchModel, 'parent_name', [
+                    'class' => 'form-control', 'id' => null
+                ]),
+                'label' => Yii::t('rbac-admin', 'Parent'),
             ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => Helper::filterActionColumn(['view', 'update', 'delete']),
+            'route',
+            'order',
+            ['class' => 'yii\grid\ActionColumn',
                 'buttons' => [
                     'update' =>  function($url,$model) {
                         return Html::a('<i class="fas fa-edit"></i>', $url, [
@@ -55,5 +59,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]);
     ?>
+    <?php Pjax::end(); ?>
 
 </div>
